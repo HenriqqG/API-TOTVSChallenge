@@ -13,4 +13,9 @@ public class Telefone {
     private Long id;
     private String numeroTelefone;
     private Long idCliente;
+
+    public Telefone(String numeroTelefone, Long idCliente) {
+        this.numeroTelefone = numeroTelefone;
+        this.idCliente = idCliente;
+    }
 }

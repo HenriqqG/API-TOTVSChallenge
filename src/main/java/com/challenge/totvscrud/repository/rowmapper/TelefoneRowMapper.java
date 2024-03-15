@@ -9,8 +9,13 @@ import java.sql.SQLException;
 
 public class TelefoneRowMapper implements RowMapper<Telefone> {
     @Override
-    public Telefone mapRow(ResultSet rs, int rowNum){
+    public Telefone mapRow(ResultSet rs, int rowNum) throws SQLException {
         Telefone telefone = new Telefone();
+
+        telefone.setId(rs.getLong("ID_TELEFONE"));
+        telefone.setNumeroTelefone(rs.getString("NUMR_TELEFONE"));
+        telefone.setIdCliente(rs.getLong("ID_CLIENTE"));
+
         return telefone;
     }
 }
