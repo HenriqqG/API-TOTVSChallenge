@@ -1,9 +1,7 @@
 package com.challenge.totvscrud.repository.impl;
 
-import com.challenge.totvscrud.entity.Cliente;
 import com.challenge.totvscrud.entity.Telefone;
 import com.challenge.totvscrud.repository.ITelefoneDAO;
-import com.challenge.totvscrud.repository.rowmapper.ClienteRowMapper;
 import com.challenge.totvscrud.repository.rowmapper.TelefoneRowMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -17,12 +15,21 @@ import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Implementação da interface ITelefoneDAO que realiza operações de acesso a dados para entidade Telefone.
+ */
 @Repository
 @AllArgsConstructor
 public class TelefoneDAO implements ITelefoneDAO {
 
     private final JdbcTemplate jdbcTemplate;
 
+    /**
+     * Recupera todos os telefones associados a um cliente pelo ID do cliente.
+     *
+     * @param idCliente O ID do cliente.
+     * @return Lista contendo todos os telefones associados ao cliente.
+     */
     @Override
     public List<Telefone> findAllByClienteId(Long idCliente) {
         try{
@@ -43,6 +50,11 @@ public class TelefoneDAO implements ITelefoneDAO {
         }
     }
 
+    /**
+     * Insere um novo telefone na base de dados.
+     *
+     * @param telefone O telefone a ser inserido.
+     */
     @Override
     @Transactional(rollbackFor = Throwable.class)
     public void insert(Telefone telefone) {
@@ -68,6 +80,11 @@ public class TelefoneDAO implements ITelefoneDAO {
         }
     }
 
+    /**
+     * Remove um telefone da base de dados pelo seu ID.
+     *
+     * @param id O ID do telefone a ser removido.
+     */
     @Override
     @Transactional(rollbackFor = Throwable.class)
     public void remove(Long id) {

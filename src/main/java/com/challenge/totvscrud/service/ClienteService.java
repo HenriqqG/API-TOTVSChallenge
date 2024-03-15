@@ -5,7 +5,6 @@ import com.challenge.totvscrud.commons.TelefoneUtil;
 import com.challenge.totvscrud.entity.Cliente;
 import com.challenge.totvscrud.entity.Telefone;
 import com.challenge.totvscrud.entity.dto.ClienteDTO;
-import com.challenge.totvscrud.entity.dto.TelefoneDTO;
 import com.challenge.totvscrud.repository.IClienteDAO;
 import com.challenge.totvscrud.repository.ITelefoneDAO;
 import lombok.AllArgsConstructor;
@@ -14,24 +13,50 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Serviço responsável por realizar operações relacionadas à entidade Cliente.
+ */
 @Service
 @AllArgsConstructor
 public class ClienteService {
 
     private final IClienteDAO clienteRepository;
     private final ITelefoneDAO telefoneRepository;
+    private static final String CLIENTE_NOT_FOUND = "Não foi possível encontrar Cliente com id %d";
 
-    public List<Cliente> findAll(){
-        return clienteRepository.findAll();
+    /**
+     * Recupera todos os clientes.
+     *
+     * @return Lista contendo todos os clientes.
+     */
+    public List<ClienteDTO> findAll(){
+        return clienteRepository.findAll().stream()
+                .map(Cliente::ToDTO).toList();
     }
 
-    public Cliente findById(ClienteDTO clienteDTO){
-        return clienteRepository.findById(clienteDTO.id());
+    /**
+     * Recupera um cliente pelo seu ID.
+     *
+     * @param id O ID do cliente.
+     * @return O objeto ClienteDTO correspondente ao cliente encontrado.
+     * @throws ResponseStatusException Se o cliente não for encontrado.
+     */
+    public ClienteDTO findById(Long id){
+        Cliente cliente = clienteRepository.findById(id);
+        if(ObjectUtils.isEmpty(cliente)){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    String.format(CLIENTE_NOT_FOUND, id));
+        }
+        return cliente.ToDTO();
     }
 
+    /**
+     * Insere um novo cliente na base de dados.
+     *
+     * @param clienteDTO O objeto ClienteDTO contendo os dados do cliente a ser inserido.
+     */
     public void inserirNovoCliente(ClienteDTO clienteDTO){
         Cliente cliente = new Cliente(clienteDTO);
         validaCliente(cliente);
@@ -43,11 +68,17 @@ public class ClienteService {
         });
     }
 
-    public void alterarCliente(ClienteDTO clienteDTO){
-        Cliente clienteToUpdate = clienteRepository.findById(clienteDTO.id());
+    /**
+     * Altera os dados de um cliente existente na base de dados.
+     *
+     * @param id         O ID do cliente a ser alterado.
+     * @param clienteDTO O objeto ClienteDTO contendo os novos dados do cliente.
+     */
+    public void alterarCliente(Long id, ClienteDTO clienteDTO){
+        Cliente clienteToUpdate = clienteRepository.findById(id);
         if(ObjectUtils.isEmpty(clienteToUpdate)){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    String.format("Não foi possível encontrar Cliente com id %d", clienteDTO.id()));
+                    String.format(CLIENTE_NOT_FOUND, id));
         }
 
         clienteToUpdate.setNomeCliente(ObjectUtils.isEmpty(clienteDTO.nome()) ? clienteToUpdate.getNomeCliente() : clienteDTO.nome());
@@ -59,11 +90,28 @@ public class ClienteService {
         clienteRepository.update(clienteToUpdate);
     }
 
-    private void removerCliente(ClienteDTO clienteDTO){
-        clienteDTO.telefones().forEach(tel -> telefoneRepository.remove(tel.id()));
-        clienteRepository.remove(clienteDTO.id());
+    /**
+     * Remove um cliente da base de dados.
+     *
+     * @param id O ID do cliente a ser removido.
+     */
+    public void removerCliente(Long id){
+        Cliente cliente = clienteRepository.findById(id);
+        if(ObjectUtils.isEmpty(cliente)){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    String.format(CLIENTE_NOT_FOUND, id));
+        }
+
+        cliente.getTelefones().forEach(tel -> telefoneRepository.remove(tel.getId()));
+        clienteRepository.remove(cliente.getId());
     }
 
+    /**
+     * Valida os dados de um cliente.
+     *
+     * @param cliente O objeto Cliente a ser validado.
+     * @throws IllegalArgumentException Se o CPF ou os telefones do cliente forem inválidos.
+     */
     private void validaCliente(Cliente cliente) {
         if(CPFUtil.isCPF(cliente.getCpfCliente())){
             throw new IllegalArgumentException("Número de CPF inválido.");

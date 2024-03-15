@@ -5,7 +5,6 @@ import com.challenge.totvscrud.entity.Telefone;
 import com.challenge.totvscrud.repository.IClienteDAO;
 import com.challenge.totvscrud.repository.rowmapper.ClienteRowMapper;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -18,6 +17,9 @@ import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Implementação da interface IClienteDAO que realiza operações de acesso a dados para entidade Cliente.
+ */
 @Repository
 @AllArgsConstructor
 public class ClienteDAO implements IClienteDAO {
@@ -25,6 +27,11 @@ public class ClienteDAO implements IClienteDAO {
     private final JdbcTemplate jdbcTemplate;
     private final TelefoneDAO telefoneRepository;
 
+    /**
+     * Recupera todos os clientes da base de dados.
+     *
+     * @return Lista contendo todos os clientes cadastrados.
+     */
     @Override
     public List<Cliente> findAll() {
         try{
@@ -50,6 +57,12 @@ public class ClienteDAO implements IClienteDAO {
         }
     }
 
+    /**
+     * Recupera um cliente da base de dados pelo seu ID.
+     *
+     * @param id O ID do cliente a ser buscado.
+     * @return O cliente encontrado, ou um objeto vazio se não houver correspondência.
+     */
     @Override
     public Cliente findById(Long id) {
         try{
@@ -78,6 +91,12 @@ public class ClienteDAO implements IClienteDAO {
         }
     }
 
+    /**
+     * Insere um novo cliente na base de dados.
+     *
+     * @param cliente O cliente a ser inserido.
+     * @return O ID do cliente inserido.
+     */
     @Override
     @Transactional(rollbackFor = Throwable.class)
     public Long insert(Cliente cliente) {
@@ -108,6 +127,11 @@ public class ClienteDAO implements IClienteDAO {
         }
     }
 
+    /**
+     * Atualiza um cliente na base de dados.
+     *
+     * @param cliente O cliente a ser atualizado.
+     */
     @Override
     @Transactional(rollbackFor = Throwable.class)
     public void update(Cliente cliente) {
@@ -132,6 +156,11 @@ public class ClienteDAO implements IClienteDAO {
         }
     }
 
+    /**
+     * Remove um cliente da base de dados pelo seu ID.
+     *
+     * @param id O ID do cliente a ser removido.
+     */
     @Override
     @Transactional(rollbackFor = Throwable.class)
     public void remove(Long id) {

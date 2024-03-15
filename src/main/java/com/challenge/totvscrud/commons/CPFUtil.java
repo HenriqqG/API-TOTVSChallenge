@@ -1,12 +1,23 @@
 package com.challenge.totvscrud.commons;
 
+import org.springframework.util.ObjectUtils;
+
 import java.util.InputMismatchException;
 
+/**
+ * Classe utilitária para validação de números de CPF (Cadastro de Pessoas Físicas) brasileiros.
+ */
 public class CPFUtil {
 
+    /**
+     * Verifica se um CPF é válido.
+     *
+     * @param cpf O CPF a ser validado.
+     * @return {@code true} se o CPF for válido, {@code false} caso contrário.
+     */
     public static boolean isCPF(String cpf) {
 
-        if (cpf == null) return false;
+        if (ObjectUtils.isEmpty(cpf)) return false;
 
         if (cpf.equals("00000000000") || cpf.equals("11111111111") || cpf.equals("22222222222") ||
                 cpf.equals("33333333333") || cpf.equals("44444444444") || cpf.equals("55555555555")

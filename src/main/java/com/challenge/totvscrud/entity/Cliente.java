@@ -8,6 +8,9 @@ import lombok.Setter;
 
 import java.util.List;
 
+/**
+ * Classe de entidade para representar um cliente.
+ */
 @Getter
 @Setter
 @AllArgsConstructor
@@ -20,10 +23,28 @@ public class Cliente {
     private String bairroCliente;
     private List<Telefone> telefones;
 
+    /**
+     * Construtor que recebe um ClienteDTO para inicializar a entidade Cliente.
+     *
+     * @param clienteDTO O ClienteDTO contendo os dados do cliente.
+     */
     public Cliente(ClienteDTO clienteDTO) {
         this.nomeCliente = clienteDTO.nome();
         this.cpfCliente = clienteDTO.cpf();
         this.enderecoCliente = clienteDTO.endereco();
         this.bairroCliente = clienteDTO.bairro();
+    }
+
+    /**
+     * Converte a entidade Cliente em um ClienteDTO.
+     *
+     * @return Um ClienteDTO correspondente à entidade Cliente.
+     */
+    public ClienteDTO ToDTO(){
+        return new ClienteDTO(
+                this.getId(), this.getNomeCliente(), this.getCpfCliente(),
+                this.getEnderecoCliente(), this.getBairroCliente(),
+                this.getTelefones().stream().map(Telefone::ToDTO).toList()
+        );
     }
 }
