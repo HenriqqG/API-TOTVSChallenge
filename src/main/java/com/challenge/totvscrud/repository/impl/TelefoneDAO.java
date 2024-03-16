@@ -39,9 +39,9 @@ public class TelefoneDAO implements ITelefoneDAO {
             sql.append("ID_TELEFONE, ");
             sql.append("NUMR_TELEFONE, ");
             sql.append("ID_CLIENTE ");
-            sql.append("FROM TABLE_TELEFONE");
+            sql.append("FROM TABLE_TELEFONE ");
             sql.append("WHERE ");
-            sql.append("1 = 1");
+            sql.append("1 = 1 ");
             sql.append("AND ID_CLIENTE = ").append(idCliente);
 
             return jdbcTemplate.query(sql.toString(), new TelefoneRowMapper());
@@ -60,7 +60,7 @@ public class TelefoneDAO implements ITelefoneDAO {
     public void insert(Telefone telefone) {
         try{
             StringBuilder sql = new StringBuilder();
-            sql.append("INSERT INTO TABLE_TELEFONE");
+            sql.append("INSERT INTO TABLE_TELEFONE ");
             sql.append("(NUMR_TELEFONE, ");
             sql.append("ID_CLIENTE) ");
             sql.append("VALUES(?,?) ");
@@ -90,7 +90,7 @@ public class TelefoneDAO implements ITelefoneDAO {
     public void remove(Long id) {
         try{
             StringBuilder sql = new StringBuilder();
-            sql.append("REMOVE FROM TABLE_TELEFONE");
+            sql.append("DELETE FROM TABLE_TELEFONE ");
             sql.append("WHERE ");
             sql.append("ID_TELEFONE = ?");
 

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -59,6 +60,14 @@ public class ClienteService {
      */
     public void inserirNovoCliente(ClienteDTO clienteDTO){
         Cliente cliente = new Cliente(clienteDTO);
+
+        List<Telefone> telefones = new ArrayList<>();
+        clienteDTO.telefones().forEach(telefoneDTO -> {
+            Telefone telefone = new Telefone(telefoneDTO.numero(), telefoneDTO.idCliente());
+            telefones.add(telefone);
+        });
+        cliente.setTelefones(telefones);
+
         validaCliente(cliente);
 
         Long idCliente = clienteRepository.insert(cliente);
@@ -113,7 +122,7 @@ public class ClienteService {
      * @throws IllegalArgumentException Se o CPF ou os telefones do cliente forem inválidos.
      */
     private void validaCliente(Cliente cliente) {
-        if(CPFUtil.isCPF(cliente.getCpfCliente())){
+        if(!CPFUtil.isCPF(cliente.getCpfCliente())){
             throw new IllegalArgumentException("Número de CPF inválido.");
         }
         cliente.getTelefones().forEach(tel -> TelefoneUtil.isTelefoneValido(tel.getNumeroTelefone()));

@@ -16,6 +16,7 @@ import org.springframework.util.ObjectUtils;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Implementação da interface IClienteDAO que realiza operações de acesso a dados para entidade Cliente.
@@ -74,9 +75,9 @@ public class ClienteDAO implements IClienteDAO {
             sql.append("CPF_CLIENTE, ");
             sql.append("ENDERECO_CLIENTE, ");
             sql.append("BAIRRO_CLIENTE ");
-            sql.append("FROM TABLE_CLIENTE");
-            sql.append("WHERE");
-            sql.append("1 = 1");
+            sql.append("FROM TABLE_CLIENTE ");
+            sql.append("WHERE ");
+            sql.append("1 = 1 ");
             sql.append("AND ID_CLIENTE = ").append(id);
 
             Cliente cliente = jdbcTemplate.queryForObject(sql.toString(), new ClienteRowMapper());
@@ -121,7 +122,7 @@ public class ClienteDAO implements IClienteDAO {
                 return ps;
             }, keyHolder);
 
-            return (Long) keyHolder.getKey();
+            return Objects.requireNonNull(keyHolder.getKey()).longValue();
         }catch (EmptyResultDataAccessException e){
             throw new RuntimeException("Não foi possível inserir novo Cliente", e);
         }
@@ -166,7 +167,7 @@ public class ClienteDAO implements IClienteDAO {
     public void remove(Long id) {
         try{
             StringBuilder sql = new StringBuilder();
-            sql.append("REMOVE FROM TABLE_CLIENTE");
+            sql.append("DELETE FROM TABLE_CLIENTE ");
             sql.append("WHERE ");
             sql.append("ID_CLIENTE = ?");
 
