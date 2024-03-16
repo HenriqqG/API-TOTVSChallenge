@@ -138,7 +138,7 @@ public class ClienteDAO implements IClienteDAO {
     public void update(Cliente cliente) {
         try{
             StringBuilder sql = new StringBuilder();
-            sql.append("UPDATE TABLE_CLIENTE");
+            sql.append("UPDATE TABLE_CLIENTE ");
             sql.append("SET NOME_CLIENTE = ?, ");
             sql.append("CPF_CLIENTE = ?, ");
             sql.append("ENDERECO_CLIENTE = ?, ");
